@@ -1,0 +1,112 @@
+复制和读写分离
+许多数据库支持数据库复制来获得更好的数据库可用性， 以及更快的服务器响应时间。 通过数据库复制功能， 数据从所谓的主服务器被复制到从服务器。 所有的写和更新必须发生在主服务器上， 而读可以发生在从服务器上。
+
+为了利用数据库复制并且完成读写分离，你可以按照下面的方法来配置 yii\db\Connection 组件：
+
+[
+    'class' => 'yii\db\Connection',
+
+    // 主库的配置
+    'dsn' => 'dsn for master server',
+    'username' => 'master',
+    'password' => '',
+
+    // 从库的通用配置
+    'slaveConfig' => [
+        'username' => 'slave',
+        'password' => '',
+        'attributes' => [
+            // 使用一个更小的连接超时
+            PDO::ATTR_TIMEOUT => 10,
+        ],
+    ],
+
+    // 从库的配置列表
+    'slaves' => [
+        ['dsn' => 'dsn for slave server 1'],
+        ['dsn' => 'dsn for slave server 2'],
+        ['dsn' => 'dsn for slave server 3'],
+        ['dsn' => 'dsn for slave server 4'],
+    ],
+]
+上述的配置指定了一主多从的设置。 这些从库其中之一将被建立起连接并执行读操作， 而主库将被用来执行写操作。 这样的读写分离将通过上述配置自动地完成。 比如，
+
+// 使用上述配置来创建一个 Connection 实例
+Yii::$app->db = Yii::createObject($config);
+
+// 在从库中的一个上执行语句
+$rows = Yii::$app->db->createCommand('SELECT * FROM user LIMIT 10')->queryAll();
+
+// 在主库上执行语句
+Yii::$app->db->createCommand("UPDATE user SET username='demo' WHERE id=1")->execute();
+Info: 通过调用 yii\db\Command::execute() 来执行的语句都被视为写操作， 而其他所有通过调用 yii\db\Command 中任一 "query" 方法来执行的语句都被视为读操作。 你可以通过 Yii::$app->db->slave 来获取当前有效的从库连接。
+Connection 组件支持从库间的负载均衡和失效备援， 当第一次执行读操作时， Connection 组件将随机地挑选出一个从库并尝试与之建立连接， 如果这个从库被发现为”挂掉的“， 将尝试连接另一个从库。 如果没有一个从库是连接得上的， 那么将试着连接到主库上。 通过配置 server status cache， 一个“挂掉的”服务器将会被记住， 因此，在一个 yii\db\Connection::serverRetryInterval 内将不再试着连接该服务器。
+
+Info: 在上面的配置中， 每个从库都共同地指定了 10 秒的连接超时时间， 这意味着，如果一个从库在 10 秒内不能被连接上， 它将被视为“挂掉的”。 你可以根据你的实际环境来调整该参数。
+你也可以配置多主多从。例如，
+
+[
+    'class' => 'yii\db\Connection',
+
+    // 主库通用的配置
+    'masterConfig' => [
+        'username' => 'master',
+        'password' => '',
+        'attributes' => [
+            // use a smaller connection timeout
+            PDO::ATTR_TIMEOUT => 10,
+        ],
+    ],
+
+    // 主库配置列表
+    'masters' => [
+        ['dsn' => 'dsn for master server 1'],
+        ['dsn' => 'dsn for master server 2'],
+    ],
+
+    // 从库的通用配置
+    'slaveConfig' => [
+        'username' => 'slave',
+        'password' => '',
+        'attributes' => [
+            // use a smaller connection timeout
+            PDO::ATTR_TIMEOUT => 10,
+        ],
+    ],
+
+    // 从库配置列表
+    'slaves' => [
+        ['dsn' => 'dsn for slave server 1'],
+        ['dsn' => 'dsn for slave server 2'],
+        ['dsn' => 'dsn for slave server 3'],
+        ['dsn' => 'dsn for slave server 4'],
+    ],
+]
+上述配置指定了两个主库和两个从库。 Connection 组件在主库之间， 也支持如从库间般的负载均衡和失效备援。 唯一的差别是， 如果没有主库可用，将抛出一个异常。
+
+注意: 当你使用 masters 属性来配置一个或多个主库时， 所有其他指定数据库连接的属性 (例如 dsn, username, password) 与 Connection 对象本身将被忽略。
+默认情况下， 事务使用主库连接， 一个事务内， 所有的数据库操作都将使用主库连接， 例如，
+
+$db = Yii::$app->db;
+// 在主库上启动事务
+$transaction = $db->beginTransaction();
+
+try {
+    // 两个语句都是在主库上执行的
+    $rows = $db->createCommand('SELECT * FROM user LIMIT 10')->queryAll();
+    $db->createCommand("UPDATE user SET username='demo' WHERE id=1")->execute();
+
+    $transaction->commit();
+} catch(\Exception $e) {
+    $transaction->rollBack();
+    throw $e;
+}
+如果你想在从库上开启事务，你应该明确地像下面这样做：
+
+$transaction = Yii::$app->db->slave->beginTransaction();
+有时，你或许想要强制使用主库来执行读查询。 这可以通过 useMaster() 方法来完成：
+
+$rows = Yii::$app->db->useMaster(function ($db) {
+    return $db->createCommand('SELECT * FROM user LIMIT 10')->queryAll();
+});
+你也可以明确地将 `Yii::$app->db->enableSlaves` 设置为 false 来将所有的读操作指向主库连接。

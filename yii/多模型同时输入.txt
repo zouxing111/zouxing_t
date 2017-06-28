@@ -1,0 +1,57 @@
+namespace app\controllers;
+
+use Yii;
+use yii\base\Model;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use app\models\User;
+use app\models\Profile;
+
+class UserController extends Controller
+{
+    public function actionUpdate($id)
+    {
+        $user = User::findOne($id);
+        $profile = Profile::findOne($id);
+        
+        if (!isset($user, $profile)) {
+            throw new NotFoundHttpException("The user was not found.");
+        }
+        
+        $user->scenario = 'update';
+        $profile->scenario = 'update';
+        
+        if ($user->load(Yii::$app->request->post()) && $profile->load(Yii::$app->request->post())) {
+            $isValid = $user->validate();
+            $isValid = $profile->validate() && $isValid;
+            if ($isValid) {
+                $user->save(false);
+                $profile->save(false);
+                return $this->redirect(['user/view', 'id' => $id]);
+            }
+        }
+        
+        return $this->render('update', [
+            'user' => $user,
+            'profile' => $profile,
+        ]);
+    }
+}
+
+<?php
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+
+$form = ActiveForm::begin([
+    'id' => 'user-update-form',
+    'options' => ['class' => 'form-horizontal'],
+]) ?>
+    <?= $form->field($user, 'username') ?>
+
+    ...other input fields...
+    
+    <?= $form->field($profile, 'website') ?>
+
+    <?= Html::submitButton('Update', ['class' => 'btn btn-primary']) ?>
+<?php ActiveForm::end() ?>
+

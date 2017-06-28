@@ -1,0 +1,142 @@
+对于那些不取回数据的语句， 你应该调用的是 yii\db\Command::execute() 方法。 例如，
+
+Yii::$app->db->createCommand('UPDATE post SET status=1 WHERE id=1')
+   ->execute();
+yii\db\Command::execute()方法返回执行sql所影响到的行数。
+
+对于 INSERT, UPDATE 和 DELETE 语句， 不再需要写纯SQL语句了， 你可以直接调用 insert()、 update()、 delete()， 来构建相应的 SQL 语句。 这些方法将正确地引用表和列名称以及绑定参数值。 例如,
+
+//insert (table name,column values)
+Yii::$app->db->createCommand()->insert('user',['name'=>'Sam','age'=>30])->execute();
+
+//update (table name,column values,condition)
+Yii::$app->db->createCommand()->update('user',['status'=>1],'age>30')->execute();
+
+//delete (table name,condition)
+Yii::$app->db->createCommand()->delete('user','status=0')->execute();
+
+你也可以调用 batchInsert() 来一次插入多行， 这比一次插入一行要高效得多：
+
+Yii::$app->db->createCommand()->batchInsert('user',['name','age'],[['Tom',30],['Jane',20],['Linda',25])->execute();
+
+
+引用表和列名称
+当写与数据库无关的代码时， 正确地引用表和列名称总是一件头疼的事， 因为不同的数据库有不同的名称引用规则， 为了克服这个问题， 你可以使用下面由 Yii 提出的引用语法。
+
+[[column name]]: 使用两对方括号来将列名括起来;
+{{table name}}: 使用两对大括号来将表名括起来。
+Yii DAO 将自动地根据数据库的具体语法来将这些结构转化为对应的被引用的列或者表名称。 例如，
+
+// 在 MySQL 中执行该 SQL : SELECT COUNT(`id`) FROM `employee`
+$count = Yii::$app->db->createCommand("SELECT COUNT([[id]]) FROM {{employee}}")
+            ->queryScalar();
+
+
+使用表前缀
+如果你的数据库表名大多都拥有一个共同的前缀， 你可以使用 Yii DAO 所提供的表前缀功能。
+
+首先，通过应用配置中的 yii\db\Connection::$tablePrefix 属性来指定表前缀：
+
+return [
+    // ...
+    'components' => [
+        // ...
+        'db' => [
+            // ...
+            'tablePrefix' => 'tbl_',
+        ],
+    ],
+];
+接着在你的代码中， 当你需要涉及到一张表名中包含该前缀的表时， 应使用语法 {{%table_name}}。 百分号将被自动地替换为你在配置 DB 组件时指定的表前缀。 例如，
+
+// 在 MySQL 中执行该 SQL: SELECT COUNT(`id`) FROM `tbl_employee`
+$count = Yii::$app->db->createCommand("SELECT COUNT([[id]]) FROM {{%employee}}")
+            ->queryScalar();
+
+
+执行事务
+当顺序地执行多个相关的语句时， 你或许需要将它们包在一个事务中来保证数据库的完整性和一致性。 如果这些语句中的任何一个失败了， 数据库将回滚到这些语句执行前的状态。
+
+下面的代码展示了一个使用事务的典型方法：
+
+Yii::$app->db->transaction(function($db) {
+    $db->createCommand($sql1)->execute();
+    $db->createCommand($sql2)->execute();
+    // ... executing other SQL statements ...
+});
+上述代码等价于下面的代码， 但是下面的代码给予了你对于错误处理代码的更多掌控：
+
+$db = Yii::$app->db;
+$transaction = $db->beginTransaction();
+
+try {
+    $db->createCommand($sql1)->execute();
+    $db->createCommand($sql2)->execute();
+    // ... executing other SQL statements ...
+    
+    $transaction->commit();
+    
+} catch(\Exception $e) {
+
+    $transaction->rollBack();
+    
+    throw $e;
+}
+通过调用 beginTransaction() 方法， 一个新事务开始了。 事务被表示为一个存储在 $transaction 变量中的 yii\db\Transaction 对象。 然后，被执行的语句都被包含在一个 try...catch... 块中。 如果所有的语句都被成功地执行了， commit() 将被调用来提交这个事务。 否则， 如果异常被触发并被捕获， rollBack() 方法将被调用， 来回滚事务中失败语句之前所有语句所造成的改变。 throw $e 将重新抛出该异常， 就好像我们没有捕获它一样， 因此正常的错误处理程序将处理它。
+
+
+指定隔离级别
+Yii 也支持为你的事务设置隔离级别。 默认情况下， 当我们开启一个新事务， 它将使用你的数据库所设定的隔离级别。 你也可以向下面这样重载默认的隔离级别，
+
+$isolationLevel = \yii\db\Transaction::REPEATABLE_READ;
+
+Yii::$app->db->transaction(function ($db) {
+    ....
+}, $isolationLevel);
+ 
+// or alternatively
+
+$transaction = Yii::$app->db->beginTransaction($isolationLevel);
+Yii 为四个最常用的隔离级别提供了常量：
+
+yii\db\Transaction::READ_UNCOMMITTED - 最弱的隔离级别，脏读、不可重复读以及幻读都可能发生。
+yii\db\Transaction::READ_COMMITTED - 避免了脏读。
+yii\db\Transaction::REPEATABLE_READ - 避免了脏读和不可重复读。
+yii\db\Transaction::SERIALIZABLE - 最强的隔离级别， 避免了上述所有的问题。
+除了使用上述的常量来指定隔离级别， 你还可以使用你的数据库所支持的具有有效语法的字符串。 比如，在 PostgreSQL 中， 你可以使用 SERIALIZABLE READ ONLY DEFERRABLE。
+
+请注意，一些数据库只允许为整个连接设置隔离级别， 即使你之后什么也没指定， 后来的事务都将获得与之前相同的隔离级别。 使用此功能时，你需要为所有的事务明确地设置隔离级别来避免冲突的设置。 在本文写作之时， 只有 MSSQL 和 SQLite 受这些限制的影响。
+
+注意: SQLite 只支持两种隔离级别， 所以你只能使用 READ UNCOMMITTED 和 SERIALIZABLE。 使用其他级别将导致异常的抛出。
+注意: PostgreSQL 不支持在事务开启前设定隔离级别， 因此，你不能在开启事务时直接指定隔离级别。 你必须在事务开始后再调用 yii\db\Transaction::setIsolationLevel()。
+嵌套事务
+如果你的数据库支持保存点， 你可以像下面这样嵌套多个事务：
+
+Yii::$app->db->transaction(function ($db) {
+    // outer transaction
+    
+    $db->transaction(function ($db) {
+        // inner transaction
+    });
+});
+或者，
+
+$db = Yii::$app->db;
+$outerTransaction = $db->beginTransaction();
+try {
+    $db->createCommand($sql1)->execute();
+
+    $innerTransaction = $db->beginTransaction();
+    try {
+        $db->createCommand($sql2)->execute();
+        $innerTransaction->commit();
+    } catch (\Exception $e) {
+        $innerTransaction->rollBack();
+        throw $e;
+    }
+
+    $outerTransaction->commit();
+} catch (\Exception $e) {
+    $outerTransaction->rollBack();
+    throw $e;
+}

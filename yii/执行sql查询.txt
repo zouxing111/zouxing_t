@@ -1,0 +1,55 @@
+//返回多行，每行都是列名和值的关联数组
+//如果该查询没有结果则返回空数组
+$posts=Yii::$app->createCommand($sql)->queryAll();
+
+//返回一行，如果没有结果则返回false
+$posts=Yii::$app->createCommand($sql)->queryOne();
+
+
+//返回一列
+如果该查询没有结果则返回空数组
+$titles=Yii::$app->createCommand('SELECT title from post')->queryColumn();
+
+//返回一个标量值。如果没有结果则返回false
+$count=Yii::$app->db->createCommand('SELECT COUNT(0) FROM ad_m_plan')->queryScalar();
+
+
+绑定参数
+$post->Yii::$app->db->createCommand('SELECT * FROM post WHERE id=:id AND status=:status')->bindValue(':id',$id)->bindValue(':status',$status)->queryOne();
+
+在 SQL 语句中， 你可以嵌入一个或多个参数占位符(例如，上述例子中的 :id )。 一个参数占位符应该是以冒号开头的字符串。 之后你可以调用下面绑定参数的方法来绑定参数值：
+
+bindValue()：绑定一个参数值
+bindValues()：在一次调用中绑定多个参数值
+bindParam()：与 bindValue() 相似，但是也支持绑定参数引用。
+下面的例子展示了几个可供选择的绑定参数的方法：
+
+$params = [':id' => $_GET['id'], ':status' => 1];
+
+$post = Yii::$app->db->createCommand('SELECT * FROM post WHERE id=:id AND status=:status')
+           ->bindValues($params)
+           ->queryOne();
+           
+$post = Yii::$app->db->createCommand('SELECT * FROM post WHERE id=:id AND status=:status', $params)
+           ->queryOne();
+
+绑定参数是通过 预处理语句 实现的。 除了防止 SQL 注入攻击， 它也可以通过一次预处理 SQL 语句， 使用不同参数多次执行， 来提升性能。 例如：
+
+$command = Yii::$app->db->createCommand('SELECT * FROM post WHERE id=:id');
+
+$post1 = $command->bindValue(':id', 1)->queryOne();
+$post2 = $command->bindValue(':id', 2)->queryOne();
+// ...
+因为 bindParam() 支持通过引用来绑定参数， 上述代码也可以像下面这样写：
+
+$command = Yii::$app->db->createCommand('SELECT * FROM post WHERE id=:id')
+              ->bindParam(':id', $id);
+
+$id = 1;
+$post1 = $command->queryOne();
+
+$id = 2;
+$post2 = $command->queryOne();
+// ...
+请注意，在执行语句前你将占位符绑定到 $id 变量， 然后在之后的每次执行前改变变量的值（这通常是用循环来完成的）。 以这种方式执行查询比为每个不同的参数值执行一次新的查询要高效得多得多。
+

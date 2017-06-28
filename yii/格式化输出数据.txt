@@ -1,0 +1,129 @@
+你可以使用 formatter application component 来格式化数据。 默认 fomatter 由 yii\i18n\Formatter 来实现，这个组件提供了一系列关于日期/时间，数字，货币等的格式化方法。 使用方法如下：
+
+$formatter = \Yii::$app->formatter;
+
+// output: January 1, 2014
+echo $formatter->asDate('2014-01-01', 'long');
+ 
+// output: 12.50%
+echo $formatter->asPercent(0.125, 2);
+ 
+// output: <a href="mailto:cebe@example.com">cebe@example.com</a>
+echo $formatter->asEmail('cebe@example.com'); 
+
+// output: Yes
+echo $formatter->asBoolean(true); 
+// it also handles display of null values:
+
+// output: (Not set)
+echo $formatter->asDate(null); 
+我们可以看到，所有的方法都形似 asXyz()，这个 Xzy 就是所支持的格式化类型。 当然你也可以使用类方法 format() 来进行格式化，通过这个类方法，你可以更自由地控制格式化的数据，这时候，类方法通常配合 yii\grid\GridView 或者 yii\widgets\DetailView 来使用。
+
+举个例子：
+
+// output: January 1, 2014
+echo Yii::$app->formatter->format('2014-01-01', 'date'); 
+
+// 你可以在第二个参数指定一个数组，这个数组提供了一些配置的参数
+// 例如这个 2 就是 asPercent() 方法的 $decimals 参数
+// output: 12.50%
+echo Yii::$app->formatter->format(0.125, ['percent', 2]); 
+Note: formatter 组件用来格式化最终展示给用户的数据. 如果你想要将用户的输入进行格式化或者只是将一些别的日期数据进行格式化（这里的格式化说的是机器可读的格式化），不要使用这个组件， 而应该使用 yii\validators\DateValidator 和 yii\validators\NumberValidator 进行用户输入格式化 关于日期格式化，戳这里 date()
+配置 Formatter
+可以对 formatter 组件在 application configuration 中进行配置
+
+return [
+    'components' => [
+        'formatter' => [
+            'dateFormat' => 'dd.MM.yyyy',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => ' ',
+            'currencyCode' => 'EUR',
+       ],
+    ],
+];
+可以参考 yii\i18n\Formatter 的配置
+
+格式化时间/日期数据
+默认支持一下几种格式化格式
+
+date: 这个变量将被格式化为日期 January 01, 2014.
+time: 这个变量将被格式化为时间 14:23.
+datetime: 这个变量将被格式化为日期+时间 January 01, 2014 14:23.
+timestamp: 这个变量将被格式化为 UNIX 时间戳 unix timestamp, 例如 1412609982.
+relativeTime: 这个变量将被格式化为人类可读的当前相对时间 1 hour ago.
+duration: 这个变量将被格式化为人类可读的时长 1 day, 2 minutes.
+时间/日期数据默认使用 date, time， datetime 方法进行格式化, 你可以对他们进行一些自己的配置，只需在配置文件里配置 dateFormat, timeFormat, 和 datetimeFormat 即可。
+
+同时，你还可以配置它使用 ICU syntax，同时你也可以配置它使用 PHP date() 语法，只需要加上 php: 前缀即可。
+
+// ICU format
+echo Yii::$app->formatter->asDate('now', 'yyyy-MM-dd'); // 2014-10-06
+
+// PHP date()-format
+echo Yii::$app->formatter->asDate('now', 'php:Y-m-d'); // 2014-10-06
+不同的国家和地区使用不同的时间格式。 你可以使用短语 (例如 long, short) 来代替. formatter 组件会根据当前的 locale 将你的短语转换成合适的格式化输出。 目前支持以下短语 (例子当前的 locale 为 en_GB):
+
+short: will output 06/10/2014 for date and 15:58 for time;
+medium: will output 6 Oct 2014 and 15:58:42;
+long: will output 6 October 2014 and 15:58:42 GMT;
+full: will output Monday, 6 October 2014 and 15:58:42 GMT.
+版本 2.0.7 起，支持格式化日期为不同的系统时钟，具体请查看文档 $calendar-property
+
+时区
+格式化时间/日期数据时，你会将他们转换成 time zone 这个时候，默认的时区为 UTC，除非你另外指定 yii\i18n\Formatter::$defaultTimeZone。
+
+下面使用 Europe/Berlin 作为默认 time zone
+
+// formatting a UNIX timestamp as a time
+echo Yii::$app->formatter->asTime(1412599260); // 14:41:00
+
+// formatting a datetime string (in UTC) as a time 
+echo Yii::$app->formatter->asTime('2014-10-06 12:41:00'); // 14:41:00
+
+// formatting a datetime string (in CEST) as a time
+echo Yii::$app->formatter->asTime('2014-10-06 14:41:00 CEST'); // 14:41:00
+
+格式化数字
+
+formatter 支持如下的方法
+
+integer: 这个变量将被格式化为整形 e.g. 42.
+decimal: 这个变量将被格式化为带着逗号的指定精度的浮点型 e.g. 2,542.123 or 2.542,123.
+percent: 这个变量将被格式化为百分比 e.g. 42%.
+scientific: 这个变量将被格式化为科学计数法 e.g. 4.2E4.
+currency: 这个变量将被格式化为货币 ￡420.00. 使用这个方法前请确认是否已经正确配置 locale
+size: 这个变量将被格式化为人类可读的字节数 e.g. 410 kibibytes.
+shortSize: 这个变量将被格式化为人类可读的字节数（缩写） size, e.g. 410 KiB.
+你可以使用 decimalSeparator 和 thousandSeparator 来进行调整。 他们都会根据当前的 locale 来进行格式化.
+
+如果你想要进行更高级的配置, 可以使用 yii\i18n\Formatter::$numberFormatterOptions 和 yii\i18n\Formatter::$numberFormatterTextOptions，NumberFormatter class 来进行格式化。
+
+举个例子，为了调整小数部分的最大值和最小值，你可以配置 yii\i18n\Formatter::$numberFormatterOptions 如下：
+
+'numberFormatterOptions' => [
+    NumberFormatter::MIN_FRACTION_DIGITS => 0,
+    NumberFormatter::MAX_FRACTION_DIGITS => 2,
+]
+
+其他的格式化
+除了时间/日期和数字的格式化，Yii 还支持如下的常用格式化
+raw: 除了 null 会被 nullDisplay 格式化外，原样输出。
+text: 编码为 HTML 格式。同时这也是 GridView DataColumn 默认使用的方法。
+ntext: 编码为 HTML 格式，换行也将被转换。
+paragraphs: 编码为 HTML 格式，以 <p> 标签包裹。
+html: 这个数值将会被 HtmlPurifier 来进行过滤来防御 XSS 攻击，你可以添加一些配置例如 ['html', ['Attr.AllowedFrameTargets' => ['_blank']]]。
+email: 这个数值将被转换为 mailto 链接。
+boolean: true => Yes, false => No，可以进行另外的配置： yii\i18n\Formatter::$booleanFormat 。
+空值
+空值（null）会被特殊格式化. fommater 默认会将空值格式化为 (not set) 对应的当前的语言. 你可以配置 nullDisplay 属性来进行个性化.
+
+本地日期格式化
+formatter 会使用当前的 locale 来决定格式化的内容。 对于同样的日期，不同的时区配置会有不同的输出：
+
+Yii::$app->formatter->locale = 'en-US';
+echo Yii::$app->formatter->asDate('2014-01-01'); // output: January 1, 2014
+
+Yii::$app->formatter->locale = 'de-DE';
+echo Yii::$app->formatter->asDate('2014-01-01'); // output: 1. Januar 2014
+

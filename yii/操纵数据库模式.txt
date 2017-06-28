@@ -1,0 +1,31 @@
+操纵数据库模式
+Yii DAO 提供了一套完整的方法来让你操纵数据库模式， 如创建表、从表中删除一列，等等。这些方法罗列如下：
+
+createTable()：创建一张表
+renameTable()：重命名一张表
+dropTable()：删除一张表
+truncateTable()：删除一张表中的所有行
+addColumn()：增加一列
+renameColumn()：重命名一列
+dropColumn()：删除一列
+alterColumn()：修改一列
+addPrimaryKey()：增加主键
+dropPrimaryKey()：删除主键
+addForeignKey()：增加一个外键
+dropForeignKey()：删除一个外键
+createIndex()：增加一个索引
+dropIndex()：删除一个索引
+这些方法可以如下地使用：
+
+// CREATE TABLE
+Yii::$app->db->createCommand()->createTable('post', [
+    'id' => 'pk',
+    'title' => 'string',
+    'text' => 'text',
+]);
+上面的数组描述要创建的列的名称和类型。 对于列的类型， Yii 提供了一套抽象数据类型来允许你定义出数据库无关的模式。 这些将根据表所在数据库的种类， 被转换为特定的类型定义。
+
+除了改变数据库模式， 你也可以通过 DB Connection 的 getTableSchema() 方法来检索某张表的定义信息。 例如，
+
+$table = Yii::$app->db->getTableSchema('post');
+该方法返回一个 yii\db\TableSchema 对象， 它包含了表中的列、主键、外键，等等的信息。 所有的这些信息主要被 query builder 和 active record 所使用，来帮助你写出数据库无关的代码。
