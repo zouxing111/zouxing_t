@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>上海奥龙国际物流有限公司</title>
+        <script type="text/javascript" src="./application/templates/js/calendar.js" ></script>
+        <script type="text/javascript" src="./application/templates/js/jquery-1.4.2.min.js" ></script>
+        <script type="text/javascript" src="./application/templates/js/js1.js" ></script>
+        <link rel="stylesheet" href="./application/templates/kindeditor/themes/default/default.css" />
+        <link rel="stylesheet" href="./application/templates/kindeditor/plugins/code/prettify.css" />
+        <script charset="utf-8" src="./application/templates/kindeditor/kindeditor-min.js"></script>
+        <script charset="utf-8" src="./application/templates/kindeditor/lang/zh_CN.js"></script>
+        <script charset="utf-8" src="./application/templates/kindeditor/plugins/code/prettify.js"></script>
+
+        <script>
+            KindEditor.ready(function(K) {
+                var editor1 = K.create('#content1', {
+                    cssPath : './application/templates/kindeditor/plugins/code/prettify.css',
+                    uploadJson : './application/templates/kindeditor/php/upload_json.php',
+                    fileManagerJson : './application/templates/kindeditor/php/file_manager_json.php',
+                    allowFileManager : true,
+                    afterCreate : function() {
+                        var self = this;
+                        K.ctrl(document, 13, function() {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                        K.ctrl(self.edit.doc, 13, function() {
+                            self.sync();
+                            K('form[name=example]')[0].submit();
+                        });
+                    }
+                });
+                prettyPrint();
+            });
+        </script>
+
+
+
+        <link rel="stylesheet" href="./application/templates/css/c3.css"></link>
+    </head>
+    <body>
+        <table  width="980" border="0" align="center" cellpadding="0" cellspacing="0">
+            <tr><td>
+                    <table width="980" height="120" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td colspan="2" width="980" align="right" valign="bottom" background="./application/templates/images/ss1.jpg">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td height="3" colspan="2"></td></tr>
+            <tr>
+                <td>
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td class="nav1">
+                                <ul>
+                                    <li><a href="admin.php?action=getAdminInfo&aut=<?php echo base64_encode(Registry::get('authkey'));?>">修改密码</a></li>
+                                    <li><a href="admin.php?action=getMessage&aut=<?php echo base64_encode(Registry::get('authkey'));?>">查看留言</a></li>
+                                    <li><a href="admin.php?action=addNews&aut=<?php echo base64_encode(Registry::get('authkey'));?>">发布新闻</a></li>
+                                    <li><a href="admin.php?action=getNewsList&aut=<?php echo base64_encode(Registry::get('authkey'));?>">管理新闻</a></li>
+                                    <li><a href="admin.php?action=updateAboutUsShow&aut=<?php echo base64_encode(Registry::get('authkey'));?>&value=zh">修改公司简介</a></li>
+                                    <li><a href="admin.php?action=updateContactShow&aut=<?php echo base64_encode(Registry::get('authkey'));?>&value=zh">修改联系方式</a></li>
+                                    <li><a href="admin.php?action=updateBusinessShow&aut=<?php echo base64_encode(Registry::get('authkey'));?>&value=zh">修改业务范围</a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td height="3"></td>
+            </tr>
+            <tr>
+                <td>
+

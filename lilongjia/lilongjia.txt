@@ -1,0 +1,32 @@
+http://www.72bz.com/user/modify.asp
+zouxing
+ty07280906
+
+
+主机管理
+zouxing.hk197.72bz.net 
+www.afschina.com 
+afschina.com 
+
+ftp
+zouxing
+sbxgR8YIRq
+
+ip
+103.40.163.197
+
+MySQL 100M	zouxingdb	无	103.40.163.198
+
+产品类型：	　　 MySQL 100M
+状态：	　　 正常
+服务器IP：	　　103.40.163.198
+开通时间：	　　2014年11月6日
+到期时间：	　　2019年11月16日
+数据库软件类型：	　　MySQL5.5
+数据库名：	　　zouxingdb
+数据库用户名：	　　zouxingdb
+数据库密码：	　　1asu4Bso93
+连接端口：	　　 3306
+数据库使用情况：	
+ 
+已用数据库空间：26199字节(0M)　库上限：100 M

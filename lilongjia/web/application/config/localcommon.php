@@ -1,0 +1,1 @@
+<?php$config=array();$config['localcommon.username']='admin';$config['localcommon.password']='ar12@22row';?>

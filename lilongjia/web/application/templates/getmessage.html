@@ -1,0 +1,62 @@
+<form action="admin.php" method="post">
+    <table width="95%" border="0" cellpadding="0" cellspacing="0" align="center">
+        <tr><td align="center"><h3>查看留言</h3></td></tr>
+        <tr><td class="td5" align="center">
+                开始时间：<input id="starttime" name="value1" value="<?php echo date('Y-m-d',time()-86400*3);?>" readonly="readonly" onclick="SelectDate(this,'yyyy-MM-dd')">&nbsp;&nbsp;&nbsp;&nbsp;
+                结束时间：<input id="endtime" name="value2" value="<?php echo date('Y-m-d',time());?>" readonly="readonly" onclick="SelectDate(this,'yyyy-MM-dd')">&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="hidden" name="action" value="getMessage">
+                <input type="hidden" name="aut" value="<?php echo base64_encode(Registry::get('authkey'));?>">
+                <input class="submit1" type="submit" value="提交">
+            </td></tr>
+    </table>
+</form>
+<?php if($html_data){?>
+<table width="100%" border="1" cellpadding="0" cellspacing="0" align="center">
+    <tr>
+        <td align="center" width="7%">
+            公司名称
+        </td>
+        <td align="center" width="7%">
+            联系人
+        </td>
+        <td align="center" width="7%">
+            联系电话
+        </td>
+        <td align="center" width="7%">
+            电子邮箱
+        </td>
+        <td align="center" width="7%">
+            联系QQ
+        </td>
+        <td align="center" width="7%">
+            MSN
+        </td>
+        <td align="center" width="7%">
+            主题
+        </td>
+        <td align="center" width="40%">
+            内容
+        </td>
+        <td align="center">
+            时间
+        </td>
+    </tr>
+    <?php 
+    $str='';
+    foreach($html_data as $info){
+    $str.='<tr>
+        <td align="center">'.$info['gsname'].' </td>
+        <td align="center">'.$info['username'].' </td>
+        <td align="center">'.$info['tel'].' </td>
+        <td align="center">'.$info['email'].' </td>
+        <td align="center">'.$info['qq'].' </td>
+        <td align="center">'.$info['msn'].' </td>
+        <td align="center">'.$info['subject'].' </td>
+        <td align="center">'.$info['content'].' </td>
+        <td align="center">'.$info['time'].' </td>
+    </tr>';
+    }
+    echo $str;
+    ?>
+</table>
+<?php }?>

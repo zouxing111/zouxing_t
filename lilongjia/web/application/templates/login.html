@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+        <script type="text/javascript" src="./application/templates/js/calendar.js" ></script>
+        <script type="text/javascript" src="./application/templates/js/jquery-1.4.2.min.js" ></script>
+        <script type="text/javascript" src="./application/templates/js/js1.js" ></script>
+        <script charset="utf-8" src="./application/templates/kindeditor/kindeditor.js"></script>
+        <script charset="utf-8" src="./application/templates/kindeditor/lang/zh_CN.js"></script>
+        <script charset="utf-8" src="./application/templates/kindeditor/plugins/code/prettify.js"></script>
+        <script>
+            KindEditor.ready(function(K) { 
+                var editor1 = K.create('#content1', {
+                    cssPath: '../kindeditor/plugins/code/prettify.css', 
+                    uploadJson: '../kindeditor/asp.net/upload_json.ashx', 
+                    fileManagerJson: '../kindeditor/asp.net/file_manager_json.ashx', 
+                    allowFileManager: true, 
+                    afterCreate: function() { 
+                        var self = this; 
+                        K.ctrl(document, 13, function() { 
+                            self.sync(); 
+                            K('form[name=example]')[0].submit(); 
+                        }); 
+                        K.ctrl(self.edit.doc, 13, function() { 
+                            self.sync(); 
+                            K('form[name=example]')[0].submit(); 
+                        });  
+                    } 
+                }); 
+                prettyPrint(); 
+            }); 
+        </script> 
+        <link rel="stylesheet" href="./application/templates/css/c1.css"></link>
+    </head>
+    <body>
+        <table width="50%" height="300" border="1" align="center" background="./application/templates/images/bj.jpg">
+            <tr>
+                <td>
+                    <form action="admin.php" method="post">
+                        <table border="0" width="100%" cellspacing="0" cellpadding="2">
+                            <tr>
+                                <td colspan="2" align="center">
+                                    <?php echo $display1; ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="40%" align="right">
+                                    用户名：
+                                </td>
+                                <td align="left">
+                                    <input type="text" name="value1" size="20" maxlength="20" value="">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="40%" align="right">
+                                    密码：
+                                </td>
+                                <td align="left">
+                                    <input type="password" name="value2" size="20" maxlength="32" value=""></td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="2">
+                                    <input type="hidden" name="action" value="login">
+                                    <input type="submit" value="登录" class="submit1">
+                                </td>
+                            </tr>
+
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

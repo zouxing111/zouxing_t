@@ -1,0 +1,82 @@
+<table width="95%" border="0" cellpadding="0" cellspacing="0" align="center">
+    <tr height="25"><td align="left" class="td3">
+            <b><img src="./application/templates/images/tt1.jpg"/><?php echo International::getLanguage('common', 6);?></b>
+        </td>
+    </tr>
+    <tr>
+        <td class="tb4"></td>
+    </tr>
+    <?php if(!$html_data){?>
+    <tr>
+        <td class="td5">
+            <?php echo International::getLanguage('xwzx', 0);?>
+        </td>
+    </tr>
+    <tr>
+        <td><table width="95%" border="0" cellpadding="0" cellspacing="0" align="center" height="300"><tr><td></td></tr></table></td>
+    </tr>
+    <?php }else{
+    $str='<table width="95%" border="0" cellpadding="0" cellspacing="0" align="center">';
+        foreach($html_data as $info){
+        $str.='<tr>
+            <td class="td6" align="left"><a href="index.php?action=006&language='.International::$languageType.'&value1='.$info['id'].'">'.$info['subject'].'</a></td>
+            <td class="td6" align="right"><a href="index.php?action=006&language='.International::$languageType.'&value1='.$info['id'].'">'.substr($info['time'], 0, 10).'</a></td>
+        </tr>';
+        }
+        $str.='<tr><td class="td5" colspan="2" align="center">';
+                if($html_page2>1){
+                $str.='<form action="index.php" method="post" style="display: inline">
+                    <input type="hidden" name="action" value="005">
+                    <input type="hidden" name="language" value="'.International::$languageType.'">
+                    <input type="hidden" name="value1" value="'.($html_page2-1).'">
+                    <input class="submit4" type="submit" value="<">
+                </form>';
+                }else{
+                $str.='<form action="index.php" method="post" style="display: inline">
+                    <input type="hidden" name="action" value="005">
+                    <input type="hidden" name="language" value="'.International::$languageType.'">
+                    <input type="hidden" name="value1" value="1">
+                    <input class="submit4" type="submit" value="<">
+                </form>';
+                }
+                for($i=1;$i<=$html_page1;$i++){
+                if($i==$html_page2){
+                $str.='<form action="index.php" method="post" style="display: inline">
+                    <input type="hidden" name="action" value="005">
+                    <input type="hidden" name="language" value="'.International::$languageType.'">
+                    <input type="hidden" name="value1" value="'.$i.'">
+                    <input class="submit5" type="submit" value="'.$i.'">
+                </form>';
+                }else{
+                $str.='<form action="index.php" method="post" style="display: inline">
+                    <input type="hidden" name="action" value="005">
+                    <input type="hidden" name="language" value="'.International::$languageType.'">
+                    <input type="hidden" name="value1" value="'.$i.'">
+                    <input class="submit4" type="submit" value="'.$i.'">
+                </form>';
+                }
+                }
+                if($html_page1>$html_page2){
+                $str.='<form action="index.php" method="post" style="display: inline">
+                    <input type="hidden" name="action" value="005">
+                    <input type="hidden" name="language" value="'.International::$languageType.'">
+                    <input type="hidden" name="value1" value="'.($html_page2+1).'">
+                    <input class="submit4" type="submit" value=">">
+                </form>';
+                }else{
+                $str.='<form action="index.php" method="post" style="display: inline">
+                    <input type="hidden" name="action" value="005">
+                    <input type="hidden" name="language" value="'.International::$languageType.'">
+                    <input type="hidden" name="value1" value="'.$html_page1.'">
+                    <input class="submit4" type="submit" value=">">
+                </form>';
+                }
+                $str.='</td></tr>';
+        $str.='</table>';
+    ?>
+    <tr>
+        <td>
+            <?php echo $str;?>
+        </td>
+    </tr><?php }?>
+</table>

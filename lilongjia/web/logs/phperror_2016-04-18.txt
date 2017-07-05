@@ -1,0 +1,3 @@
+[18-Apr-2016 00:20:13] PHP Fatal error:  require() [<a href='function.require'>function.require</a>]: Failed opening required 'E:\wwwroot\zouxing\web\core\_controller.php' (include_path='.;C:\php5\pear') in E:\wwwroot\zouxing\web\core\framework.php on line 98
+[18-Apr-2016 05:19:25] PHP Fatal error:  require() [<a href='function.require'>function.require</a>]: Failed opening required 'E:\wwwroot\zouxing\web\core\_controller.php' (include_path='.;C:\php5\pear') in E:\wwwroot\zouxing\web\core\framework.php on line 98
+[18-Apr-2016 08:32:17] PHP Fatal error:  require() [<a href='function.require'>function.require</a>]: Failed opening required 'E:\wwwroot\zouxing\web\core\_controller.php' (include_path='.;C:\php5\pear') in E:\wwwroot\zouxing\web\core\framework.php on line 98

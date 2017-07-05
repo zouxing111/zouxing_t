@@ -1,0 +1,31 @@
+<form action="admin.php" method="post">
+    <table width="95%" border="0" cellpadding="0" cellspacing="0" align="center">
+        <tr><td colspan="2" align="center"><h3>发布新闻</h3></td></tr>
+        <tr>
+            <td width="10%" align="right">标题：</td>
+            <td align="left"><input name="value1" value="" size="80"></td>
+        </tr>
+        <tr>
+            <td width="10%" align="right">内容：</td>
+            <td align="left"><textarea name="value2" cols="100" rows="28" id="content1" style="width: 100%;height: 300px;visibility: hidden"></textarea></td>
+        </tr>
+        <tr>
+            <td width="10%" align="right">时间：</td>
+            <td align="left">
+                <input name="value3" id="time1" value="<?php echo date('Y-m-d',time());?>" readonly="readonly" onclick="SelectDate(this,'yyyy-MM-dd')">
+            </td>
+        </tr>
+        <tr>
+            <td width="10%" align="right">语言种类：</td>
+            <td align="left">
+                <input type="radio" name="value4" value="zh" checked="checked">中文&nbsp;&nbsp;<input type="radio" name="value4" value="en">英文
+            </td>
+        </tr>
+        <tr><td class="td5" align="center" colspan="2">
+                <input type="hidden" name="action" value="addNews">
+                <input type="hidden" name="aut" value="<?php echo base64_encode(Registry::get('authkey'));?>">
+                <input class="submit1" type="submit" value="提交">
+            </td>
+        </tr>
+    </table>
+</form>

@@ -1,0 +1,2 @@
+[05-Sep-2015 19:09:27] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in D:\wwwroot\zouxing\wwwroot\application\events\output_user.php on line 10
+[05-Sep-2015 20:59:18] PHP Fatal error:  require() [<a href='function.require'>function.require</a>]: Failed opening required 'D:\wwwroot\zouxing\wwwroot\core\_controller.php' (include_path='.;C:\php5\pear') in D:\wwwroot\zouxing\wwwroot\core\framework.php on line 98

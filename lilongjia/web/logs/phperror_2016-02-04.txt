@@ -1,0 +1,2 @@
+[04-Feb-2016 00:36:47] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in D:\wwwroot\zouxing\wwwroot\application\events\output_user.php on line 10
+[04-Feb-2016 00:42:10] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in D:\wwwroot\zouxing\wwwroot\application\events\output_user.php on line 10

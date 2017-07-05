@@ -1,0 +1,12 @@
+[02-May-2015 16:29:36] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[HY000] [2003] Can't connect to MySQL server on '121.127.248.165' (10061)' in D:\wwwroot\zouxing\wwwroot\core\database.php:29
+Stack trace:
+#0 D:\wwwroot\zouxing\wwwroot\core\database.php(29): PDO->__construct('mysql:dbname=zo...', 'zouxingdb', '1asu4Bso93')
+#1 D:\wwwroot\zouxing\wwwroot\core\database.php(21): Database->connect('local.database')
+#2 D:\wwwroot\zouxing\wwwroot\core\database.php(16): Database->__construct('local.database')
+#3 D:\wwwroot\zouxing\wwwroot\application\models\user.php(26): Database::load('local.database')
+#4 D:\wwwroot\zouxing\wwwroot\application\controllers\user.php(19): User_Model->getNews(1, 10, 'zh')
+#5 D:\wwwroot\zouxing\wwwroot\core\framework.php(45): User_Controller->action000('', '', '', '', '', '', '', '')
+#6 D:\wwwroot\zouxing\wwwroot\core\framework.php(108): FrameWork->dispatch(Array, Array)
+#7 D:\wwwroot\zouxing\wwwroot\index.php(44): FrameWork->run()
+#8 {main}
+  thrown in D:\wwwroot\zouxing\wwwroot\core\database.php on line 29

@@ -1,0 +1,19 @@
+<form action="admin.php" method="post">
+    <table width="95%" border="0" cellpadding="0" cellspacing="0" align="center">
+        <tr><td colspan="2" align="center"><h3>修改密码</h3></td></tr>
+        <tr>
+            <td width="50%" align="right" class="td5">用户名：</td>
+            <td align="left"><input name="value1" value="<?php echo $html_username;?>" size="30"></td>
+        </tr>
+        <tr>
+            <td width="50%" align="right" class="td5">密码：</td>
+            <td align="left"><input name="value2" value="<?php echo $html_password;?>" size="30"></td>
+        </tr>
+        <tr><td class="td5" align="center" colspan="2">
+                <input type="hidden" name="action" value="changeAdminInfo">
+                <input type="hidden" name="aut" value="<?php echo base64_encode(Registry::get('authkey'));?>">
+                <input class="submit1" type="submit" value="提交">
+            </td>
+        </tr>
+    </table>
+</form>

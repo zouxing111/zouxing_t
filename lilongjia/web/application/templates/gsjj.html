@@ -1,0 +1,20 @@
+<table width="95%" border="0" cellpadding="0" cellspacing="0" align="center">
+    <tr height="25"><td align="left" valign="middle" class="td3">
+            <b><img src="./application/templates/images/tt1.jpg"/><?php echo International::getLanguage('gsjj', 0);?></b>
+        </td>
+    </tr>
+    <tr>
+        <td class="tb4"></td>
+    </tr>
+    <?php if(!$html_data){?>
+    <tr>
+        <td class="td5">
+            <?php echo International::getLanguage('gsjj', 1);?>
+        </td>
+    </tr>
+    <?php }else{?><tr>
+        <td class="td5">
+            <?php echo $html_data;?>
+        </td>
+    </tr><?php }?>
+</table>

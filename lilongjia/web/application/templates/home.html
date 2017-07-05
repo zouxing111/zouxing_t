@@ -1,0 +1,66 @@
+<table width="95%" border="0" cellpadding="0" cellspacing="0" align="center"> 
+    <?php if($html_news){?>
+    <tr height="25">
+        <td align="left" valign="middle" class="td3">
+            <b><img src="./application/templates/images/tt1.jpg"/><?php echo International::getLanguage('common', 6);?></b>
+        </td>
+    </tr>
+    <tr>
+        <td class="tb4"></td>
+    </tr>
+    <tr>
+        <td>
+            <?php 
+            $str='
+    <marquee behavior="scroll" direction="up" scrollamount="3" height="200" width="100%" onmouseover="this.stop()" onmouseout="this.start()" loop="-1">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">';
+            foreach($html_news as $info){
+            $str.='<tr>
+                <td class="td6" align="left"><a href="index.php?action=006&language='.International::$languageType.'&value1='.$info['id'].'">'.$info['subject'].'</a></td>
+                <td class="td6" align="right"><a href="index.php?action=006&language='.International::$languageType.'&value1='.$info['id'].'">'.substr($info['time'], 0, 10).'</a></td>
+            </tr>';
+            }
+            $str.='</table>
+    </marquee>';
+    echo $str;
+    ?>
+</td>
+</tr>
+<?php }?>
+<tr height="25"><td align="left" valign="middle" class="td3">
+        <b><img src="./application/templates/images/tt1.jpg"/><?php echo International::getLanguage('gsjj', 0);?></b>
+    </td>
+</tr>
+<tr>
+    <td class="tb4"></td>
+</tr>
+<?php if(!$html_data){?>
+<tr>
+    <td class="td5">
+        <?php echo International::getLanguage('gsjj', 1);?>
+        <!--<p>&nbsp;&nbsp;我们上海奥龙国际物流有限公司专业经营国际运输业务，向海内外客户提供海、陆、空进出口货物运输服务，包括订舱、配载、报关、仓储、提运、保险以及多项物流服务。
+            本公司业务功能齐全，实现现代化管理，并拥有一支经验丰富，业务娴熟，职业操守好的员工队伍，能竭诚为广大新老客户提供诚信、安全、高效、快捷的国际货运服务。
+            无论何时，奥龙国际都以“诚信、安全、高效、快捷”之企业精神与“顾客至上，没有最好只要更好”的经营理念作为企业宗旨，不仅在规模上，更在服务品质上，向更高的标准而努力，希望广大客户与奥龙国际携手共同开拓新的市场。
+            本公司的服务宗旨是“ 顾客至上，顾客的需求就是我们的要求，为客户提供诚信、安全、高效、快捷的全球服务”。<br/><br/>
+            <span>我们的服务</span><br/>
+            &nbsp;&nbsp;奥龙国际是一家提供综合性物流服务的行业领先企业。我们为来自所有领域和地区的合作伙伴服务，在整个供应链中，把客户具有价值的机遇和严峻的挑战转变成客户真正的竞争优势。
+　 　奥龙专注于海运、空运、陆路运输、清关、报关。在全球服务到达20,000多个城市，覆盖120多个国家。我们精挑细选的1,200多家优质代理伙伴，使我们的服务网络不断延伸，满足并超越客户的需求和期望。
+　　为所有人，我们所做的事，我们都将把它做得更好。<br/><br/>
+            <span>我们的承诺 </span><br/>
+            &nbsp;&nbsp;为广大新老客户提供诚信、安全、高效、快捷的服务<br/>
+            &nbsp;&nbsp;诚信&nbsp;&nbsp;-&nbsp;&nbsp;与新老顾客金诚合作，绝不提供虚假信息，蓄意隐瞒客户<br/>
+            &nbsp;&nbsp;安全&nbsp;&nbsp;-&nbsp;&nbsp;保证货物在存储、运输过程的安全<br/>
+            &nbsp;&nbsp;高效&nbsp;&nbsp;-&nbsp;&nbsp;我们会根据你货物的特点在最短的时间为你选择最好的运输通道<br/>
+            &nbsp;&nbsp;快捷&nbsp;&nbsp;-&nbsp;&nbsp;整个操作过程我们会有专人全程跟进，为新老客户提供简捷、快速的服务<br/><br/>
+            <span>我们的理念</span><br/>
+            &nbsp;&nbsp;顾客至上，顾客的需要就是我们的要求，没有最好只有更好<br/><br/>
+            <span>我们的追求</span><br/>
+            &nbsp;&nbsp;为顾客提供最优质的服务</p>-->
+    </td>
+</tr>
+<?php }else{?><tr>
+    <td class="td5">
+        <?php echo $html_data;?>
+    </td>
+</tr><?php }?>
+</table>

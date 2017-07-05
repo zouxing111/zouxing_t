@@ -1,0 +1,4 @@
+[19-Mar-2016 13:46:30] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in E:\wwwroot\zouxing\web\application\models\user.php on line 3
+[19-Mar-2016 13:46:57] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in E:\wwwroot\zouxing\web\application\config\local.php on line 3
+[19-Mar-2016 13:47:22] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in E:\wwwroot\zouxing\web\application\templates\layouts\user.php on line 3
+[19-Mar-2016 13:47:49] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in E:\wwwroot\zouxing\web\application\events\output_user.php on line 7
