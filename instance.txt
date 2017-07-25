@@ -1,0 +1,7 @@
+public static function instance($type=null){
+        if(!isset(self::$instance)){
+            $class=__CLASS__;
+            self::$instance=new $class($type);
+        }
+        return self::$instance;
+    }
